@@ -17,6 +17,15 @@
 
 #if defined(_MSC_VER) && (_MSC_VER<1900)
 #define META_NO_INLINE_NAMESPACES
+#define META_NO_CONSTEXPR
+#endif
+
+#ifdef META_NO_CONSTEXPR
+#define META_CONSTEXPR
+#define META_CONSTEXPR_CONST const
+#else
+#define META_CONSTEXPR constexpr
+#define META_CONSTEXPR_CONST constexpr
 #endif
 
 namespace meta

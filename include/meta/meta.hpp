@@ -114,7 +114,7 @@ namespace meta
         {
             /// Returns a \p T nullptr
             template <typename T>
-            constexpr T *_nullptr_v()
+            META_CONSTEXPR T *_nullptr_v()
             {
                 return nullptr;
             }
@@ -1035,7 +1035,7 @@ namespace meta
         {
             using type = list;
             /// \return `sizeof...(Ts)`
-            static constexpr std::size_t size() noexcept { return sizeof...(Ts); }
+            static META_CONSTEXPR std::size_t size() noexcept{ return sizeof...(Ts); }
         };
 
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -1543,7 +1543,7 @@ namespace meta
         namespace detail
         {
             // With thanks to Peter Dimov:
-            constexpr std::size_t find_index_i_(bool const *const first, bool const *const last,
+            META_CONSTEXPR std::size_t find_index_i_(bool const *const first, bool const *const last,
                                                 std::size_t N = 0)
             {
                 return first == last ? npos::value : *first ? N
@@ -1564,7 +1564,7 @@ namespace meta
             template <typename... T, typename V>
             struct find_index_<list<T...>, V>
             {
-                static constexpr bool s_v[] = {std::is_same<T, V>::value...};
+                static META_CONSTEXPR_CONST bool s_v[] = { std::is_same<T, V>::value... };
                 using type = size_t<find_index_i_(s_v, s_v + sizeof...(T))>;
             };
         } // namespace detail
@@ -1593,7 +1593,7 @@ namespace meta
         namespace detail
         {
             // With thanks to Peter Dimov:
-            constexpr std::size_t reverse_find_index_i_(bool const *const first,
+            META_CONSTEXPR std::size_t reverse_find_index_i_(bool const *const first,
                                                         bool const *const last, std::size_t N)
             {
                 return first == last
@@ -1615,7 +1615,7 @@ namespace meta
             template <typename... T, typename V>
             struct reverse_find_index_<list<T...>, V>
             {
-                static constexpr bool s_v[] = {std::is_same<T, V>::value...};
+                static META_CONSTEXPR bool s_v[] = { std::is_same<T, V>::value... };
                 using type = size_t<reverse_find_index_i_(s_v, s_v + sizeof...(T), sizeof...(T))>;
             };
         } // namespace detail
@@ -2001,12 +2001,12 @@ namespace meta
             template <typename T>
             struct static_const
             {
-                static constexpr T value{};
+                static META_CONSTEXPR_CONST T value{};
             };
 
             // Avoid potential ODR violations with global objects:
             template <typename T>
-            constexpr T static_const<T>::value;
+            META_CONSTEXPR_CONST T static_const<T>::value;
         } // namespace detail
 
         ///\endcond
@@ -2019,7 +2019,7 @@ namespace meta
             struct for_each_fn
             {
                 template <class UnaryFunction, class... Args>
-                constexpr auto operator()(list<Args...>, UnaryFunction f) const -> UnaryFunction
+                META_CONSTEXPR auto operator()(list<Args...>, UnaryFunction f) const -> UnaryFunction
                 {
                     return (void)std::initializer_list<int>{((void)f(Args{}), 0)...}, f;
                 }
@@ -2035,7 +2035,7 @@ namespace meta
             /// `for_each(List, UnaryFunction)` calls the \p UnaryFunction for each
             /// argument in the \p List.
             /// \ingroup runtime
-            constexpr auto &&for_each = detail::static_const<detail::for_each_fn>::value;
+            META_CONSTEXPR auto &&for_each = detail::static_const<detail::for_each_fn>::value;
 
             /// \cond
         }
@@ -2430,7 +2430,7 @@ namespace meta
             struct lambda_<list<As...>, false>
             {
             private:
-                static constexpr std::size_t arity = sizeof...(As)-1;
+                static META_CONSTEXPR_CONST std::size_t arity = sizeof...(As)-1;
                 using Tags = list<As...>; // Includes the lambda body as the last arg!
                 using F = back<Tags>;
                 template <typename T, typename Args>
@@ -2779,7 +2779,7 @@ namespace meta
         {
             using value_type = T;
             /// \return `sizeof...(Is)`
-            static constexpr std::size_t size() noexcept { return sizeof...(Is); }
+            static META_CONSTEXPR std::size_t size() noexcept{ return sizeof...(Is); }
         };
 
         /// \cond
@@ -2852,7 +2852,7 @@ namespace meta
         /// A user-defined literal that generates objects of type \c meta::size_t.
         /// \ingroup integral
         template <char... Chs>
-        constexpr fold<list<char_<Chs>...>, meta::size_t<0>, quote<detail::atoi_>> operator"" _z()
+        META_CONSTEXPR fold<list<char_<Chs>...>, meta::size_t<0>, quote<detail::atoi_>> operator"" _z()
         {
             return {};
         }

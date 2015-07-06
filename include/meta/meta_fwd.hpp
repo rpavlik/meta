@@ -15,9 +15,16 @@
 #ifndef META_FWD_HPP
 #define META_FWD_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER<1900)
+#define META_NO_INLINE_NAMESPACES
+#endif
+
 namespace meta
 {
-    inline namespace v1
+#ifndef META_NO_INLINE_NAMESPACES
+    inline
+#endif
+    namespace v1
     {
         template <typename T, T...>
         struct integer_sequence;
@@ -53,6 +60,9 @@ namespace meta
         }
 
     } // inline namespace v1
+#ifdef META_NO_INLINE_NAMESPACES
+    using namespace v1;
+#endif
 } // namespace meta
 
 #endif

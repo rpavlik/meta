@@ -103,7 +103,10 @@
 namespace meta
 {
     /// \cond
-    inline namespace v1
+#ifndef META_NO_INLINE_NAMESPACES
+    inline
+#endif
+    namespace v1
     {
         /// \endcond
 
